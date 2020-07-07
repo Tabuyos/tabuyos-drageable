@@ -1,6 +1,6 @@
-drag(document.getElementById("div2"), document.getElementById("div1"));
+drag(document.getElementById("div2"), document.getElementById("div1"), document.getElementById("div3"));
 
-function drag(obj, tobj) {
+function drag(obj, tobj, dobj) {
 	
 	//设置好方向
     let dir = null;
@@ -19,15 +19,24 @@ function drag(obj, tobj) {
     let top = null;
 	let upPull = false;
 	let downPull = false;
+	let pendingY = 0;
 	
-	obj.addEventListener("touchstart", function(e) {
+	dobj.addEventListener("touchstart", function(e) {
 		dragStart(e)
 	});
-	obj.addEventListener("touchmove", function(e) {
+	dobj.addEventListener("touchmove", function(e) {
 		dragMove(e)
 	});
-	obj.addEventListener("touchend", function(e) {
-		console.log("end")
+	dobj.addEventListener("touchend", function(e) {
+		dir = null;
+		// dobj.style["display"] = "none"
+	});
+	obj.addEventListener("touchstart", function(e) {
+		if(dobj.style["opacity"] === "0" || dobj.style["opacity"] === ""){
+			dobj.style["opacity"] = "1"
+		} else {
+			dobj.style["opacity"] = "0"
+		}
 	});
 
 	dragStart = function(e){
@@ -45,27 +54,33 @@ function drag(obj, tobj) {
 		//获取到距离上边的距离
         top = obj.offsetTop;
 		parent = obj.parentNode.offsetHeight
-		bottom = parent - top - e.touches[0].pageY - firstY
+		bottom = parent - e.touches[0].pageY
+		pendingY = e.touches[0].pageY;
         //下一步判断方向距离左边的距离+元素的宽度减去自己设定的宽度，只要点击的时候大于在这个区间，他就算右边
-        if(top < firstY && firstY < top + 30){
+        if(top - 20 < firstY && firstY < top){
             dir = "top";
         }
-		console.log(dir)
-		console.log(parent)
-		console.log(top)
-		console.log(height)
-		console.log(bottom)
+		console.log("parent", parent)
+		console.log("Top", top)
+		console.log("Height", height)
+		console.log("Bottom", bottom)
 	}
 
 	dragMove = function(e){
-		if(obj.offsetTop < 30){
+		console.log("obj.parentNode.offsetHeight", obj.parentNode.offsetHeight)
+		console.log("e.touches[0].pageY", e.touches[0].pageY)
+		console.log("obj.offsetTop", obj.offsetTop)
+		console.log("obj.offsetHeight", obj.offsetHeight)
+		console.log("pendingY", pendingY)
+		if(obj.offsetTop < 30 && e.touches[0].pageY < pendingY){
+			pendingY = 30;
 			console.log(1)
 			return;
-		} else if ((obj.parentNode.offsetHeight - obj.offsetTop - e.touches[0].pageY + firstY) < 30){
+		} else if (obj.offsetHeight < 10 && e.touches[0].pageY > pendingY){
+			pendingY = parent - 30;
 			console.log(2)
 			return;
 		}
-		console.log(12)
         e = e||event;
         switch(dir)
         {
@@ -76,11 +91,24 @@ function drag(obj, tobj) {
 			console.log(21)
 			break;
 		}
+		dragResize(e);
 	}
 
 	dragResize = function(e){
-		obj.style["height"] = height-(e.touches[0].pageY-firstY)+"px";
-		tobj.style["height"] = theight + (e.touches[0].pageY-firstY)+"px";
+		console.log("resize")
+		obj.style["height"] = height - (e.touches[0].pageY - firstY) + "px";
+		tobj.style["height"] = theight + (e.touches[0].pageY - firstY) + "px";
+		dobj.style["top"] = tobj.offsetHeight - 20 + "px"
         // obj.style["top"] = top+(e.touches[0].pageY-firstY)+"px";
+		console.log(obj.offsetHeight)
+		// if(obj.offsetHeight > (parent - 30)){
+		// 	obj.style["height"] = parent - 30 + "px";
+		// 	tobj.style["height"] = 10 + "px";
+		// 	dobj.style["top"] = 10 + "px"
+		// } else if(obj.offsetHeight < 10){
+		// 	obj.style["height"] = 10 + "px";
+		// 	// tobj.style["height"] = parent - 30 + "px";
+		// 	// dobj.style["top"] = parent - 30 + "px"
+		// }
 	}
 }

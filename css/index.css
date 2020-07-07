@@ -20,5 +20,14 @@ body {
 	width: 100%;
 	z-index: 999;
 	bottom: 0;
-	/* border-top:30px solid #000000; */
+}
+
+.div3 {
+	position: absolute;
+	background-color: #cc77ff;
+	height: 20px;
+	width: 100%;
+	z-index: 999;
+	top: 880px;
+	opacity: 0;
 }
