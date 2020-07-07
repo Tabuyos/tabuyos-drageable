@@ -1,0 +1,24 @@
+body {
+	margin: 0;
+}
+
+.content {
+	height: 90vh;
+}
+
+.div1 {
+	background-color: #ff9966;
+	height: 900px;
+	width: 100%;
+
+}
+
+.div2 {
+	position: sticky;
+	background-color: #ccff99;
+	height: calc(90vh - 900px);
+	width: 100%;
+	z-index: 999;
+	bottom: 0;
+	/* border-top:30px solid #000000; */
+}
