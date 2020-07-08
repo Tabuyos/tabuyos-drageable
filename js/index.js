@@ -67,6 +67,7 @@ function drag(obj, tobj, dobj) {
 	}
 
 	dragMove = function(e){
+        e = e||event;
 		console.log("obj.parentNode.offsetHeight", obj.parentNode.offsetHeight)
 		console.log("e.touches[0].pageY", e.touches[0].pageY)
 		console.log("obj.offsetTop", obj.offsetTop)
@@ -80,18 +81,17 @@ function drag(obj, tobj, dobj) {
 			pendingY = parent - 30;
 			console.log(2)
 			return;
+		} else{
+			switch(dir){
+				case "top":
+				dragResize(e);
+				break;
+				case null:
+				console.log(21)
+				break;
+			}
 		}
-        e = e||event;
-        switch(dir)
-        {
-            case "top":
-            dragResize(e);
-            break;
-			case null:
-			console.log(21)
-			break;
-		}
-		dragResize(e);
+		// dragResize(e);
 	}
 
 	dragResize = function(e){
