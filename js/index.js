@@ -67,6 +67,7 @@ function drag(obj, tobj, dobj) {
 	}
 
 	dragMove = function(e){
+		console.log("防抖/节流成功")
         e = e||event;
 		console.log("obj.parentNode.offsetHeight", obj.parentNode.offsetHeight)
 		console.log("e.touches[0].pageY", e.touches[0].pageY)
@@ -111,4 +112,40 @@ function drag(obj, tobj, dobj) {
 		// 	// dobj.style["top"] = parent - 30 + "px"
 		// }
 	}
+
+	function debounce(fun, delay) {
+		console.log("开始防抖")
+		return function (args) {
+			let that = this
+			let _args = args
+			clearTimeout(fun.id)
+			fun.id = setTimeout(function () {
+				fun.call(that, _args)
+			}, delay)
+		}
+	}
+
+	let debounceAjax = debounce(dragMove, 500)
+
+	function throttle(fun, delay) {
+		console.log("开始节流")
+        let last, deferTimer
+        return function (args) {
+            let that = this
+            let _args = arguments
+            let now = +new Date()
+            if (last && now < last + delay) {
+                clearTimeout(deferTimer)
+                deferTimer = setTimeout(function () {
+                    last = now
+                    fun.apply(that, _args)
+                }, delay)
+            }else {
+                last = now
+                fun.apply(that,_args)
+            }
+        }
+    }
+
+	let throttleAjax = throttle(dragMove, 10)
 }
